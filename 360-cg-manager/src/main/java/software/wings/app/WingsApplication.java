@@ -241,6 +241,7 @@ import software.wings.service.impl.InfrastructureMappingServiceImpl;
 import software.wings.service.impl.SettingAttributeObserver;
 import software.wings.service.impl.SettingsServiceImpl;
 import software.wings.service.impl.WorkflowExecutionServiceImpl;
+import software.wings.service.impl.applicationmanifest.AppManifestSettingAttributePTaskManager;
 import software.wings.service.impl.applicationmanifest.ManifestPerpetualTaskManger;
 import software.wings.service.impl.artifact.ArtifactStreamPTaskManager;
 import software.wings.service.impl.artifact.ArtifactStreamPTaskMigrationJob;
@@ -490,6 +491,11 @@ public class WingsApplication extends Application<MainConfiguration> {
                                     .subjectCLass(SettingsServiceImpl.class)
                                     .observerClass(SettingAttributeObserver.class)
                                     .observer(ArtifactStreamSettingAttributePTaskManager.class)
+                                    .build());
+            remoteObservers.add(RemoteObserver.builder()
+                                    .subjectCLass(SettingsServiceImpl.class)
+                                    .observerClass(SettingAttributeObserver.class)
+                                    .observer(AppManifestSettingAttributePTaskManager.class)
                                     .build());
             remoteObservers.add(RemoteObserver.builder()
                                     .subjectCLass(InfrastructureDefinitionServiceImpl.class)
@@ -1375,6 +1381,8 @@ public class WingsApplication extends Application<MainConfiguration> {
     settingsService.getSubject().register(clusterRecordHandler);
     settingsService.getArtifactStreamSubject().register(
         injector.getInstance(Key.get(ArtifactStreamSettingAttributePTaskManager.class)));
+    settingsService.getAppManifestSubject().register(
+        injector.getInstance(Key.get(AppManifestSettingAttributePTaskManager.class)));
 
     InfrastructureDefinitionServiceImpl infrastructureDefinitionService =
         (InfrastructureDefinitionServiceImpl) injector.getInstance(Key.get(InfrastructureDefinitionService.class));
