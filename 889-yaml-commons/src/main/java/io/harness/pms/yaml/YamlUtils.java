@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Shield 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/06/PolyForm-Shield-1.0.0.txt.
+ */
+
 package io.harness.pms.yaml;
 
 import static io.harness.annotations.dev.HarnessTeam.PIPELINE;
@@ -86,6 +93,19 @@ public class YamlUtils {
 
   public YamlField getPipelineField(YamlNode rootYamlNode) {
     return (rootYamlNode == null || !rootYamlNode.isObject()) ? null : rootYamlNode.getField("pipeline");
+  }
+
+  public YamlField getTopRootFieldInYaml(YamlNode rootYamlNode) {
+    if (rootYamlNode == null || !rootYamlNode.isObject()) {
+      return null;
+    }
+    for (YamlField field : rootYamlNode.fields()) {
+      if (field.getName().equals(YamlNode.UUID_FIELD_NAME)) {
+        continue;
+      }
+      return field;
+    }
+    throw new InvalidRequestException("No Top root node available in the yaml.");
   }
 
   public YamlField injectUuidWithLeafUuid(String content) throws IOException {

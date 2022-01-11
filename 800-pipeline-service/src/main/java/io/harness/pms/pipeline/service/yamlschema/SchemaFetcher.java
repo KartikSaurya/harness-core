@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Free Trial 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
+ */
+
 package io.harness.pms.pipeline.service.yamlschema;
 
 import static java.lang.String.format;
@@ -7,6 +14,7 @@ import io.harness.ModuleType;
 import io.harness.SchemaCacheKey;
 import io.harness.annotations.dev.HarnessTeam;
 import io.harness.annotations.dev.OwnedBy;
+import io.harness.encryption.Scope;
 import io.harness.pms.pipeline.service.yamlschema.cache.PartialSchemaDTOWrapperValue;
 import io.harness.pms.pipeline.service.yamlschema.cache.SchemaCacheUtils;
 import io.harness.pms.pipeline.service.yamlschema.cache.YamlSchemaDetailsWrapperValue;
@@ -98,8 +106,10 @@ public class SchemaFetcher {
   }
 
   // TODO: introduce cache while fetching step schema
-  public JsonNode fetchStepYamlSchema(String accountId, EntityType entityType) {
+  public JsonNode fetchStepYamlSchema(String accountId, String orgIdentifier, String projectIdentifier, Scope scope,
+      EntityType entityType, String yamlGroup, List<YamlSchemaWithDetails> yamlSchemaWithDetailsList) {
     SchemaGetter schemaGetter = schemaGetterFactory.obtainGetter(accountId, entityType.getEntityProduct());
-    return schemaGetter.fetchStepYamlSchema(entityType);
+    return schemaGetter.fetchStepYamlSchema(
+        orgIdentifier, projectIdentifier, scope, entityType, yamlGroup, yamlSchemaWithDetailsList);
   }
 }

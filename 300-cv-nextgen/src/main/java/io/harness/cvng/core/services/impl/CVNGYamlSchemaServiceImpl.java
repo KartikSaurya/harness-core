@@ -1,3 +1,10 @@
+/*
+ * Copyright 2022 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Free Trial 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
+ */
+
 package io.harness.cvng.core.services.impl;
 
 import static io.harness.yaml.schema.beans.SchemaConstants.DEFINITIONS_NODE;
@@ -69,8 +76,8 @@ public class CVNGYamlSchemaServiceImpl implements CVNGYamlSchemaService {
   }
 
   @Override
-  public JsonNode getStepYamlSchema(EntityType entityType) {
-    return yamlSchemaProvider.getYamlSchema(entityType, null, null, null);
+  public JsonNode getStepYamlSchema(EntityType entityType, String orgId, String projectId, Scope scope) {
+    return yamlSchemaProvider.getYamlSchema(entityType, orgId, projectId, scope);
   }
 
   @Override

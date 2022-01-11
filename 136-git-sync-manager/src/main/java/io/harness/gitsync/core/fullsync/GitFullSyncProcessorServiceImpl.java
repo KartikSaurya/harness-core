@@ -1,3 +1,10 @@
+/*
+ * Copyright 2021 Harness Inc. All rights reserved.
+ * Use of this source code is governed by the PolyForm Free Trial 1.0.0 license
+ * that can be found in the licenses directory at the root of this repository, also available at
+ * https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Free-Trial-1.0.0.txt.
+ */
+
 package io.harness.gitsync.core.fullsync;
 
 import static io.harness.annotations.dev.HarnessTeam.DX;
@@ -18,6 +25,7 @@ import io.harness.gitsync.core.fullsync.service.FullSyncJobService;
 import io.harness.ng.core.entitydetail.EntityDetailRestToProtoMapper;
 
 import com.google.inject.Inject;
+import com.mongodb.client.result.UpdateResult;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,7 +84,7 @@ public class GitFullSyncProcessorServiceImpl implements io.harness.gitsync.core.
     logContext.put("messageId", messageId);
 
     return FullSyncChangeSet.newBuilder()
-        .setBranchName(yamlGitConfigDTO.getBranch())
+        .setBranchName(entityInfo.getBranchName())
         .setEntityDetail(entityDetailRestToProtoMapper.createEntityDetailDTO(entityInfo.getEntityDetail()))
         .setFilePath(entityInfo.getFilePath())
         .setYamlGitConfigIdentifier(yamlGitConfigDTO.getIdentifier())
@@ -95,6 +103,11 @@ public class GitFullSyncProcessorServiceImpl implements io.harness.gitsync.core.
   @Override
   public void performFullSync(GitFullSyncJob fullSyncJob) {
     log.info("Started full sync for the job {}", fullSyncJob.getMessageId());
+    UpdateResult updateResult =
+        fullSyncJobService.markJobAsRunning(fullSyncJob.getAccountIdentifier(), fullSyncJob.getUuid());
+    if (updateResult.getModifiedCount() == 0L) {
+      log.info("There is no job to run for the id {}, maybe the other thread is running it", fullSyncJob.getUuid());
+    }
     List<GitFullSyncEntityInfo> allEntitiesToBeSynced =
         gitFullSyncEntityService.list(fullSyncJob.getAccountIdentifier(), fullSyncJob.getMessageId());
     log.info("Number of files is {}", emptyIfNull(allEntitiesToBeSynced).size());
