@@ -190,7 +190,7 @@ public class PMSYamlSchemaServiceImpl implements PMSYamlSchemaService {
           partialSchemaDtoMap.put(partialSchemaDTOList1.get(0).getModuleType(), partialSchemaDTOList1);
         }
       }
-      mergeCVIntoCDIfPresent(partialSchemaDtoMap);
+      //      mergeCVIntoCDIfPresent(partialSchemaDtoMap);
 
       partialSchemaDtoMap.values().forEach(partialSchemaDTOList1
           -> partialSchemaDTOList1.forEach(partialSchemaDTO

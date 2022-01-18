@@ -11,6 +11,7 @@ import static io.harness.yaml.schema.beans.SchemaConstants.DEFINITIONS_NODE;
 import static io.harness.yaml.schema.beans.SchemaConstants.PROPERTIES_NODE;
 
 import io.harness.EntityType;
+import io.harness.ModuleType;
 import io.harness.annotations.dev.HarnessTeam;
 import io.harness.annotations.dev.OwnedBy;
 import io.harness.jackson.JsonNodeUtils;
@@ -130,7 +131,9 @@ public class PmsYamlSchemaHelper {
         partialSchemaDTO.getNodeName(), (ObjectNode) partialSchemaDTO.getSchema(), partialSchemaDTO.getNamespace());
 
     mergePipelineStepsIntoStage(stageDefinitionsNode, pipelineSteps, partialSchemaDTO);
-    mergeStageElementConfig(stageElementConfig, subtypeClassMap);
+    if (partialSchemaDTO.getModuleType() != ModuleType.CV) {
+      mergeStageElementConfig(stageElementConfig, subtypeClassMap);
+    }
 
     pipelineDefinitions.set(partialSchemaDTO.getNamespace(), stageDefinitionsNode.get(partialSchemaDTO.getNamespace()));
   }
